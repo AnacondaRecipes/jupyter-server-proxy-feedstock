@@ -11,7 +11,7 @@ source:
 
 build:
   number: 0
-  # jupyterlab is missing on s390x.
+  # jupyterlab is missing on s390x
   skip: True  # [py<36 or (linux and s390x)]
   script: {{ PYTHON }} -m pip install --no-deps -vv --install-option="--skip-npm" .
 
