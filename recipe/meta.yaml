@@ -18,8 +18,8 @@ build:
 requirements:
   host:
     - python
-    - jupyter-packaging 0.12.0
-    - jupyterlab 3.4.4
+    - jupyter-packaging <1.0
+    - jupyterlab <4.0
     - pip
     - setuptools
     - wheel
