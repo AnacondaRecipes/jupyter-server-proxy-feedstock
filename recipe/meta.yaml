@@ -11,14 +11,15 @@ source:
 
 build:
   number: 0
-  skip: True  # [py<36]
+  # jupyterlab is missing on s390x.
+  skip: True  # [py<36 or (linux and s390x)]
   script: {{ PYTHON }} -m pip install --no-deps -vv --install-option="--skip-npm" .
 
 requirements:
   host:
     - python
-    - jupyter-packaging >=0.7,<1.0
-    - jupyterlab >=3.0,<4
+    - jupyter-packaging 0.12.0
+    - jupyterlab 3.4.4
     - pip
     - setuptools
     - wheel
@@ -38,12 +39,12 @@ test:
     # print everything
     - jupyter labextension list
     - jupyter server extension list
-    - jupyter serverextension list  # [not (linux and s390x)]
+    - jupyter serverextension list
     # validate each
     - jupyter server extension list 1>server_extensions 2>&1
     - cat server_extensions | grep -ie "jupyter_server_proxy.*OK"
-    - jupyter serverextension list 1>serverextensions 2>&1  # [not (linux and s390x)]
-    - cat serverextensions | grep -ie "jupyter_server_proxy.*OK"  # [not (linux and s390x)]
+    - jupyter serverextension list 1>serverextensions 2>&1
+    - cat serverextensions | grep -ie "jupyter_server_proxy.*OK"
     - jupyter labextension list 1>labextensions 2>&1
     - cat labextensions | grep -ie "@jupyterlab/server-proxy.*{{ version.replace(".", "\\.") }}.*OK"
   imports:
