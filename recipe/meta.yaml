@@ -1,37 +1,40 @@
-{% set name = 'jupyter-server-proxy' %}
-{% set version = "3.2.2" %}
+{% set name = "jupyter-server-proxy" %}
+{% set version = "4.1.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 54690ea9467035d187c930c599e76065017baf16e118e6eebae0d3a008c4d946
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/jupyter_server_proxy-{{ version }}.tar.gz
+  sha256: 2cfac3b4232fe7144e8e60296b4f861708b4f13b29260a2cf28976bf8e617f70
 
 build:
   number: 0
   # jupyterlab is missing on s390x
-  skip: True  # [py<36 or (linux and s390x)]
-  script: {{ PYTHON }} -m pip install --no-deps -vv --install-option="--skip-npm" .
+  skip: True  # [py<38 or (linux and s390x)]
+  script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation -vv .
 
 requirements:
   host:
     - python
-    - jupyter-packaging <1.0
-    - jupyterlab <4.0
+    - hatch-jupyter-builder >=0.5
+    - hatch-nodejs-version
+    - hatchling >=1.4.0
     - pip
-    - setuptools
-    - wheel
   run:
     - python
     - aiohttp
-    - jupyter_server >=1
-    - simpervisor >=0.4
+    - importlib-metadata >=4.8.3  # [py<310]
+    - jupyter_server >=1.0
+    - simpervisor >=1.0
+  run_constrained:
+    - jupyterlab >=3,<5
+    - notebook >=6,<8
 
 test:
   requires:
-    - jupyterlab >=3.0,<4
+    - jupyterlab
     - m2-grep  # [win]
     - pip
   commands:
@@ -46,7 +49,7 @@ test:
     - jupyter serverextension list 1>serverextensions 2>&1
     - cat serverextensions | grep -ie "jupyter_server_proxy.*OK"
     - jupyter labextension list 1>labextensions 2>&1
-    - cat labextensions | grep -ie "@jupyterlab/server-proxy.*{{ version.replace(".", "\\.") }}.*OK"
+    - cat labextensions | grep -ie "@jupyterhub/jupyter-server-proxy.*{{ version.replace(".", "\\.") }}.*OK"
   imports:
     - jupyter_server_proxy
 
@@ -56,7 +59,7 @@ about:
   license_family: BSD
   license_file:
     - LICENSE
-    - jupyter_server_proxy/labextension/static/third-party-licenses.json
+    - labextension/LICENSE
   summary: Jupyter server extension to supervise and proxy web services
   description: |
     Jupyter Server Proxy lets you run arbitrary external processes (such as
