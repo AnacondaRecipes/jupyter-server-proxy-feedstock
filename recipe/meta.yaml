@@ -18,9 +18,8 @@ build:
 requirements:
   host:
     - python
-    - hatch-jupyter-builder >=0.5
-    - hatch-nodejs-version
-    - hatchling >=1.4.0
+    - hatch-jupyter-builder >=0.8.3
+    - hatchling >=1.18.0
     - pip
   run:
     - python
@@ -28,6 +27,8 @@ requirements:
     - importlib-metadata >=4.8.3  # [py<310]
     - jupyter_server >=1.0
     - simpervisor >=1.0
+    - tornado >=5.1
+    - traitlets >=4.2.1
   run_constrained:
     - jupyterlab >=3,<5
     - notebook >=6,<8
