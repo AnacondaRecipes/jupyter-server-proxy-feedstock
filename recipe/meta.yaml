@@ -43,12 +43,9 @@ test:
     # print everything
     - jupyter labextension list
     - jupyter server extension list
-    - jupyter serverextension list
     # validate each
     - jupyter server extension list 1>server_extensions 2>&1
     - cat server_extensions | grep -ie "jupyter_server_proxy.*OK"
-    - jupyter serverextension list 1>serverextensions 2>&1
-    - cat serverextensions | grep -ie "jupyter_server_proxy.*OK"
     - jupyter labextension list 1>labextensions 2>&1
     - cat labextensions | grep -ie "@jupyterhub/jupyter-server-proxy.*{{ version.replace(".", "\\.") }}.*OK"
   imports:
