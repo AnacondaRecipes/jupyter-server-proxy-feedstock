@@ -41,13 +41,19 @@ test:
   commands:
     - pip check
     # print everything
-    - jupyter labextension list
     - jupyter server extension list
+    - jupyter labextension list
+    - jupyter notebook extension list
+    - jupyter lab extension list
     # validate each
     - jupyter server extension list 1>server_extensions 2>&1
     - cat server_extensions | grep -ie "jupyter_server_proxy.*OK"
     - jupyter labextension list 1>labextensions 2>&1
     - cat labextensions | grep -ie "@jupyterhub/jupyter-server-proxy.*{{ version.replace(".", "\\.") }}.*OK"
+    - jupyter notebook extension list 1>notebook_extensions 2>&1
+    - cat notebook_extensions | grep -ie "jupyter_server_proxy.*OK"
+    - jupyter lab extension list 1>lab_extensions 2>&1
+    - cat lab_extensions | grep -ie "jupyter_server_proxy.*OK"
   imports:
     - jupyter_server_proxy
 
