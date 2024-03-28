@@ -1,5 +1,5 @@
 {% set name = "jupyter-server-proxy" %}
-{% set version = "4.1.0" %}
+{% set version = "4.1.2" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/jupyter_server_proxy-{{ version }}.tar.gz
-  sha256: 2cfac3b4232fe7144e8e60296b4f861708b4f13b29260a2cf28976bf8e617f70
+  sha256: 6fd8ce88a0100e637b48f1d3aa32f09672bcb2813dc057d70567f0a40b1237f5
 
 build:
   number: 0
@@ -18,9 +18,8 @@ build:
 requirements:
   host:
     - python
-    - hatch-jupyter-builder >=0.5
-    - hatch-nodejs-version
-    - hatchling >=1.4.0
+    - hatch-jupyter-builder >=0.8.3
+    - hatchling >=1.18.0
     - pip
   run:
     - python
@@ -28,6 +27,8 @@ requirements:
     - importlib-metadata >=4.8.3  # [py<310]
     - jupyter_server >=1.0
     - simpervisor >=1.0
+    - tornado >=5.1
+    - traitlets >=4.2.1
   run_constrained:
     - jupyterlab >=3,<5
     - notebook >=6,<8
@@ -37,19 +38,23 @@ test:
     - jupyterlab
     - m2-grep  # [win]
     - pip
+    - notebook
   commands:
     - pip check
     # print everything
-    - jupyter labextension list
     - jupyter server extension list
-    - jupyter serverextension list
+    - jupyter labextension list
+    - jupyter notebook extension list
+    - jupyter lab extension list
     # validate each
     - jupyter server extension list 1>server_extensions 2>&1
     - cat server_extensions | grep -ie "jupyter_server_proxy.*OK"
-    - jupyter serverextension list 1>serverextensions 2>&1
-    - cat serverextensions | grep -ie "jupyter_server_proxy.*OK"
     - jupyter labextension list 1>labextensions 2>&1
     - cat labextensions | grep -ie "@jupyterhub/jupyter-server-proxy.*{{ version.replace(".", "\\.") }}.*OK"
+    - jupyter notebook extension list 1>notebook_extensions 2>&1
+    - cat notebook_extensions | grep -ie "jupyter_server_proxy.*OK"
+    - jupyter lab extension list 1>lab_extensions 2>&1
+    - cat lab_extensions | grep -ie "jupyter_server_proxy.*OK"
   imports:
     - jupyter_server_proxy
 
