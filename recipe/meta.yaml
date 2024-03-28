@@ -38,6 +38,7 @@ test:
     - jupyterlab
     - m2-grep  # [win]
     - pip
+    - notebook
   commands:
     - pip check
     # print everything
