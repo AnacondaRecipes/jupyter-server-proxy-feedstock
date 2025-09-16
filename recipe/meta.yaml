@@ -44,19 +44,19 @@ test:
   commands:
     - pip check
     # print everything
-    - jupyter server extension list
-    - jupyter labextension list
-    - jupyter notebook extension list
-    - jupyter lab extension list
-    # validate each
-    - jupyter server extension list 1>server_extensions 2>&1
-    - cat server_extensions | grep -ie "jupyter_server_proxy.*OK"
-    - jupyter labextension list 1>labextensions 2>&1
-    - cat labextensions | grep -ie "@jupyterhub/jupyter-server-proxy.*{{ version.replace(".", "\\.") }}.*OK"
-    - jupyter notebook extension list 1>notebook_extensions 2>&1
-    - cat notebook_extensions | grep -ie "jupyter_server_proxy.*OK"
-    - jupyter lab extension list 1>lab_extensions 2>&1
-    - cat lab_extensions | grep -ie "jupyter_server_proxy.*OK"
+    - jupyter server extension list  # [not win]
+    - jupyter labextension list  # [not win]
+    - jupyter notebook extension list  # [not win]
+    - jupyter lab extension list  # [not win]
+    # validate each  # [not win]
+    - jupyter server extension list 1>server_extensions 2>&1  # [not win]
+    - cat server_extensions | grep -ie "jupyter_server_proxy.*OK"  # [not win]
+    - jupyter labextension list 1>labextensions 2>&1  # [not win]
+    - cat labextensions | grep -ie "@jupyterhub/jupyter-server-proxy.*{{ version.replace(".", "\\.") }}.*OK"  # [not win]
+    - jupyter notebook extension list 1>notebook_extensions 2>&1  # [not win]
+    - cat notebook_extensions | grep -ie "jupyter_server_proxy.*OK"  # [not win]
+    - jupyter lab extension list 1>lab_extensions 2>&1  # [not win]
+    - cat lab_extensions | grep -ie "jupyter_server_proxy.*OK"  # [not win]
   imports:
     - jupyter_server_proxy
 
