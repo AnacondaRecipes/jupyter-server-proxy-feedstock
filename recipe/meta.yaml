@@ -36,12 +36,16 @@ requirements:
     - jupyter-server >=2
 
 test:
+  source_files:
+    - tests
   requires:
     - jupyterlab
     - m2-grep  # [win]
     - m2-coreutils  # [win]
     - pip
     - notebook
+    - pytest
+    - pytest-asyncio
   commands:
     - pip check
     # print everything
@@ -58,6 +62,7 @@ test:
     - cat notebook_extensions | grep -ie "jupyter_server_proxy.*OK"
     - jupyter lab extension list 1>lab_extensions 2>&1
     - cat lab_extensions | grep -ie "jupyter_server_proxy.*OK"
+    - pytest --asyncio-mode=auto -vv tests
   imports:
     - jupyter_server_proxy
 
