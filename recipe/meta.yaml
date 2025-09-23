@@ -20,7 +20,8 @@ requirements:
     - hatch-jupyter-builder >=0.8.3
     - hatchling >=1.18.0
     - pip
-    - jupyterlab >=4.0.6,<5.0.0a0
+    # upstream pinning: >=4.0.6,<5.0.0a0; set to 4.2.5 which is available for all used python versions
+    - jupyterlab ==4.2.5
   run:
     - python
     - aiohttp
@@ -37,8 +38,9 @@ requirements:
   
   # flaky tests (fail/pass on some platforms more frequently than others)
   # assertion failure: incorrect response code
-  {% set test_skip = " --deselect=tests/test_proxies.py::test_server_proxy_hash_sign_encoding" %}
-  {% set test_skip = " --deselect=tests/test_proxies.py::test_server_proxy_minimal_proxy_path_encoding" %}
+  {% set test_skip = "" %}
+  {% set test_skip = test_skip + " --deselect=tests/test_proxies.py::test_server_proxy_hash_sign_encoding" %}
+  {% set test_skip = test_skip + " --deselect=tests/test_proxies.py::test_server_proxy_minimal_proxy_path_encoding" %}
 
 test:
   source_files:
