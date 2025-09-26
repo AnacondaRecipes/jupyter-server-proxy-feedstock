@@ -10,7 +10,7 @@ source:
   sha256: e5732eb9c810c0caa997f90a2f15f7d09af638e7eea9c67eb5c43e9c1f0e1157
 
 build:
-  number: 0
+  number: 1
   skip: true  # [py<38]
   script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation -vv .
 
@@ -21,7 +21,8 @@ requirements:
     - hatchling >=1.18.0
     - pip
     # upstream pinning: >=4.0.6,<5.0.0a0; set to 4.2.5 which is available for all used python versions
-    - jupyterlab ==4.2.5
+    - jupyterlab ==4.2.5  # [py<313]
+    - jupyterlab ==4.4.6  # [py>=313]
   run:
     - python
     - aiohttp
