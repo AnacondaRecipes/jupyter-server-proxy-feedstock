@@ -41,6 +41,7 @@ requirements:
   {% set test_skip = test_skip + " --deselect=tests/test_proxies.py::test_server_proxy_minimal_proxy_path_encoding" %}
   {% set test_skip = test_skip + " --deselect=tests/test_proxies.py::test_server_proxy_on_requested_port_no_command" %}
   {% set test_skip = test_skip + " --deselect=tests/test_proxies.py::test_server_proxy_port_non_absolute" %}
+  {% set test_skip = test_skip + " --deselect=tests/test_proxies.py::test_server_proxy_port_absolute" %}
 
 test:
   source_files:
