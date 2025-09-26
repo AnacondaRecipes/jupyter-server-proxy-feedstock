@@ -1,18 +1,17 @@
 {% set name = "jupyter-server-proxy" %}
-{% set version = "4.1.2" %}
+{% set version = "4.4.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/jupyter_server_proxy-{{ version }}.tar.gz
-  sha256: 6fd8ce88a0100e637b48f1d3aa32f09672bcb2813dc057d70567f0a40b1237f5
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_') }}-{{ version }}.tar.gz
+  sha256: e5732eb9c810c0caa997f90a2f15f7d09af638e7eea9c67eb5c43e9c1f0e1157
 
 build:
   number: 0
-  # jupyterlab is missing on s390x
-  skip: True  # [py<38 or (linux and s390x)]
+  skip: true  # [py<38]
   script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation -vv .
 
 requirements:
@@ -21,24 +20,39 @@ requirements:
     - hatch-jupyter-builder >=0.8.3
     - hatchling >=1.18.0
     - pip
+    # upstream pinning: >=4.0.6,<5.0.0a0; set to 4.2.5 which is available for all used python versions
+    - jupyterlab ==4.2.5
   run:
     - python
     - aiohttp
     - importlib-metadata >=4.8.3  # [py<310]
-    - jupyter_server >=1.0
-    - simpervisor >=1.0
-    - tornado >=5.1
-    - traitlets >=4.2.1
+    - jupyter_server >=1.24.0
+    - simpervisor >=1.0.0
+    - tornado >=6.1.0
+    - traitlets >=5.1.0
   run_constrained:
-    - jupyterlab >=3,<5
-    - notebook >=6,<8
+    - jupyterlab >=4.0.5,<5.0.0a0
+    - notebook >=7
+    - robotframework-jupyterlibrary >=0.4.2
+    - jupyter-server >=2
+  
+  # flaky tests (fail/pass on some platforms more frequently than others)
+  # assertion failure: incorrect response code
+  {% set test_skip = "" %}
+  {% set test_skip = test_skip + " --deselect=tests/test_proxies.py::test_server_proxy_hash_sign_encoding" %}
+  {% set test_skip = test_skip + " --deselect=tests/test_proxies.py::test_server_proxy_minimal_proxy_path_encoding" %}
 
 test:
+  source_files:
+    - tests
   requires:
     - jupyterlab
     - m2-grep  # [win]
+    - m2-coreutils  # [win]
     - pip
     - notebook
+    - pytest
+    - pytest-asyncio
   commands:
     - pip check
     # print everything
@@ -55,6 +69,7 @@ test:
     - cat notebook_extensions | grep -ie "jupyter_server_proxy.*OK"
     - jupyter lab extension list 1>lab_extensions 2>&1
     - cat lab_extensions | grep -ie "jupyter_server_proxy.*OK"
+    - pytest --asyncio-mode=auto -vv {{ test_skip }} tests
   imports:
     - jupyter_server_proxy
 
