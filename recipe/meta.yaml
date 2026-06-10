@@ -1,25 +1,26 @@
 {% set name = "jupyter-server-proxy" %}
-{% set version = "4.4.0" %}
+{% set version = "4.5.0" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_') }}-{{ version }}.tar.gz
-  sha256: e5732eb9c810c0caa997f90a2f15f7d09af638e7eea9c67eb5c43e9c1f0e1157
+  sha256: 40835ed475fe30bea6e8f2e493fd8dfc700a7f37d86d6e97bc5298034521ac1c
 
 build:
-  number: 2
-  skip: true  # [py<38]
+  number: 0
   script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation -vv .
+  skip: true  # [py<38]
 
 requirements:
   host:
+    - pip
     - python
     - hatch-jupyter-builder >=0.8.3
     - hatchling >=1.18.0
-    - pip
+    - jupyterlab >=4.0.6,<5.0.0a0
   run:
     - python
     - aiohttp
@@ -32,7 +33,10 @@ requirements:
     - jupyterlab >=4.0.5,<5.0.0a0
     - notebook >=7
     - robotframework-jupyterlibrary >=0.4.2
-    - jupyter-server >=2
+    # acceptance and lab
+    # - jupyter-server >=2
+    # classic
+    # - jupyter-server <2
   
   # flaky tests (fail/pass on some platforms more frequently than others)
   # assertion failure: incorrect response code
