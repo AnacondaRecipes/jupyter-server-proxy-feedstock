@@ -54,6 +54,7 @@ test:
     - notebook
     - pytest
     - pytest-asyncio
+    - jupyterhub
   commands:
     - pip check
     # print everything
