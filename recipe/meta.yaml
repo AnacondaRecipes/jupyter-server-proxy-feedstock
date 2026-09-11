@@ -48,7 +48,6 @@ test:
     - tests
   requires:
     - jupyterlab
-    - uutils-coreutils  # [win]
     - pip
     - notebook
     - pytest
@@ -64,16 +63,16 @@ test:
     # validate each
     - jupyter server extension list 1>server_extensions 2>&1
     - cat server_extensions | grep -ie "jupyter_server_proxy.*OK"      # [not win]
-    - cat server_extensions | findstr /i /r "jupyter_server_proxy.*OK"  # [win]
+    - findstr /i /r "jupyter_server_proxy.*OK" server_extensions        # [win]
     - jupyter labextension list 1>labextensions 2>&1
     - cat labextensions | grep -ie "@jupyterhub/jupyter-server-proxy.*{{ version.replace(".", "\\.") }}.*OK"      # [not win]
-    - cat labextensions | findstr /i /r "@jupyterhub/jupyter-server-proxy.*{{ version }}.*OK"                     # [win]
+    - findstr /i /r "@jupyterhub/jupyter-server-proxy.*{{ version }}.*OK" labextensions                            # [win]
     - jupyter notebook extension list 1>notebook_extensions 2>&1
     - cat notebook_extensions | grep -ie "jupyter_server_proxy.*OK"      # [not win]
-    - cat notebook_extensions | findstr /i /r "jupyter_server_proxy.*OK"  # [win]
+    - findstr /i /r "jupyter_server_proxy.*OK" notebook_extensions        # [win]
     - jupyter lab extension list 1>lab_extensions 2>&1
     - cat lab_extensions | grep -ie "jupyter_server_proxy.*OK"      # [not win]
-    - cat lab_extensions | findstr /i /r "jupyter_server_proxy.*OK"  # [win]
+    - findstr /i /r "jupyter_server_proxy.*OK" lab_extensions        # [win]
     - pytest --asyncio-mode=auto -vv {{ test_skip }} tests
   imports:
     - jupyter_server_proxy
