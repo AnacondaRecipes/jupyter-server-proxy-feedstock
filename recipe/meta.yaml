@@ -10,7 +10,7 @@ source:
   sha256: 40835ed475fe30bea6e8f2e493fd8dfc700a7f37d86d6e97bc5298034521ac1c
 
 build:
-  number: 0
+  number: 1
   script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation -vv .
   skip: true  # [py<38]
 
@@ -48,8 +48,6 @@ test:
     - tests
   requires:
     - jupyterlab
-    - m2-grep  # [win]
-    - m2-coreutils  # [win]
     - pip
     - notebook
     - pytest
@@ -64,13 +62,17 @@ test:
     - jupyter lab extension list
     # validate each
     - jupyter server extension list 1>server_extensions 2>&1
-    - cat server_extensions | grep -ie "jupyter_server_proxy.*OK"
+    - grep -ie "jupyter_server_proxy.*OK" server_extensions      # [not win]
+    - findstr /i /r "jupyter_server_proxy.*OK" server_extensions        # [win]
     - jupyter labextension list 1>labextensions 2>&1
-    - cat labextensions | grep -ie "@jupyterhub/jupyter-server-proxy.*{{ version.replace(".", "\\.") }}.*OK"
+    - cat labextensions | grep -ie "@jupyterhub/jupyter-server-proxy.*{{ version.replace(".", "\\.") }}.*OK"      # [not win]
+    - findstr /i /r "@jupyterhub/jupyter-server-proxy.*{{ version }}.*OK" labextensions                            # [win]
     - jupyter notebook extension list 1>notebook_extensions 2>&1
-    - cat notebook_extensions | grep -ie "jupyter_server_proxy.*OK"
+    - cat notebook_extensions | grep -ie "jupyter_server_proxy.*OK"      # [not win]
+    - findstr /i /r "jupyter_server_proxy.*OK" notebook_extensions        # [win]
     - jupyter lab extension list 1>lab_extensions 2>&1
-    - cat lab_extensions | grep -ie "jupyter_server_proxy.*OK"
+    - cat lab_extensions | grep -ie "jupyter_server_proxy.*OK"      # [not win]
+    - findstr /i /r "jupyter_server_proxy.*OK" lab_extensions        # [win]
     - pytest --asyncio-mode=auto -vv {{ test_skip }} tests
   imports:
     - jupyter_server_proxy
