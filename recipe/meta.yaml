@@ -62,7 +62,7 @@ test:
     - jupyter lab extension list
     # validate each
     - jupyter server extension list 1>server_extensions 2>&1
-    - cat server_extensions | grep -ie "jupyter_server_proxy.*OK"      # [not win]
+    - grep -ie "jupyter_server_proxy.*OK" server_extensions      # [not win]
     - findstr /i /r "jupyter_server_proxy.*OK" server_extensions        # [win]
     - jupyter labextension list 1>labextensions 2>&1
     - cat labextensions | grep -ie "@jupyterhub/jupyter-server-proxy.*{{ version.replace(".", "\\.") }}.*OK"      # [not win]
